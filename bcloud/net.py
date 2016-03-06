@@ -66,10 +66,10 @@ def urlopen_simple(url, retries=RETRIES, timeout=TIMEOUT):
             return urllib.request.urlopen(url, timeout=timeout)
         except OSError:
             logger.error(traceback.format_exc())
-            
+
         except :
             logger.error(traceback.format_exc())
-            
+
     return None
 
 def urlopen(url, headers={}, data=None, retries=RETRIES, timeout=TIMEOUT):
@@ -101,10 +101,10 @@ def urlopen(url, headers={}, data=None, retries=RETRIES, timeout=TIMEOUT):
             return req
         except OSError:
             logger.error(traceback.format_exc())
-            
+
         except:
             logger.error(traceback.format_exc())
-            
+
     return None
 
 def urlopen_without_redirect(url, headers={}, data=None, retries=RETRIES):

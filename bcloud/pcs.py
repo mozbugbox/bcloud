@@ -10,6 +10,7 @@
 import json
 import os
 import re
+import urllib.parse
 
 from lxml import html
 from lxml.cssselect import CSSSelector as CSS
@@ -270,7 +271,7 @@ def verify_share_password(uk, shareid, pwd, vcode=''):
     '''验证共享文件的密码.
 
     如果密码正确, 会在返回的请求头里加入一个cookie: BDCLND
-    
+
     pwd - 四位的明文密码
     vcode - 验证码; 目前还不支持
     '''
@@ -557,7 +558,7 @@ def mkdir(cookie, tokens, path):
     @return 返回一个dict, 里面包含了fs_id, ctime等信息.
     '''
     url = ''.join([
-        const.PAN_API_URL, 
+        const.PAN_API_URL,
         'create?a=commit&channel=chunlei&clienttype=0&web=1',
         '&bdstoken=', tokens['bdstoken'],
     ])
@@ -841,7 +842,7 @@ def rapid_upload(cookie, tokens, source_path, path, upload_mode):
 
 def slice_upload(cookie, data):
     '''分片上传一个大文件
-    
+
     分片上传完成后, 会返回这个分片的MD5, 用于最终的文件合并.
     如果上传失败, 需要重新上传.
     不需要指定上传路径, 上传后的数据会被存储在服务器的临时目录里.
@@ -922,6 +923,8 @@ def search(cookie, tokens, key, path='/'):
     key - 搜索的关键词
     path - 如果指定目录名的话, 只搜索本目录及其子目录里的文件名.
     '''
+    key = encoder.encode_uri_component(key)
+    path = encoder.encode_uri_component(path)
     url = ''.join([
         const.PAN_API_URL,
         'search?channel=chunlei&clienttype=0&web=1',
@@ -941,7 +944,7 @@ def search(cookie, tokens, key, path='/'):
 def cloud_add_link_task(cookie, tokens, source_url, save_path,
                         vcode='', vcode_input=''):
     '''新建离线下载任务.
-    
+
     source_url - 可以是http/https/ftp等一般的链接
                  可以是eMule这样的链接
     path       - 要保存到哪个目录, 比如 /Music/, 以/开头, 以/结尾的绝对路径.
@@ -1047,7 +1050,7 @@ def cloud_query_sinfo(cookie, tokens, source_path):
 
 def cloud_query_magnetinfo(cookie, tokens, source_url, save_path):
     '''获取磁链的信息.
-    
+
     在新建磁链任务时, 要先获取这个磁链的信息, 比如里面包含哪些文件, 文件的名
     称与大小等.
 
@@ -1075,7 +1078,7 @@ def cloud_query_magnetinfo(cookie, tokens, source_url, save_path):
 
 def cloud_list_task(cookie, tokens, start=0):
     '''获取当前离线下载的任务信息
-    
+
     start - 从哪个任务开始, 从0开始计数, 会获取这50条任务信息
     '''
     url = ''.join([
@@ -1119,7 +1122,7 @@ def cloud_query_task(cookie, tokens, task_ids):
 
 def cloud_cancel_task(cookie, tokens, task_id):
     '''取消离线下载任务.
-    
+
     task_id - 之前建立离线下载任务时的task id, 也可以从cloud_list_task()里
               获取.
     '''

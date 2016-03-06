@@ -123,7 +123,7 @@ def async_call(func, *args, callback=None):
 
 def xdg_open(uri):
     '''使用桌面环境中默认的程序打开指定的URI
-    
+
     当然, 除了URI格式之外, 也可以是路径名, 文件名, 比如:
     xdg_open('/etc/issue')
     推荐使用Gio.app_info_xx() 来启动一般程序, 而用xdg_open() 来打开目录.
@@ -136,7 +136,7 @@ def xdg_open(uri):
 def update_liststore_image(liststore, tree_iters, col, pcs_files, dir_name,
                            icon_size=96):
     '''下载文件缩略图, 并将它显示到liststore里.
-    
+
     pcs_files - 里面包含了几个必要的字段.
     dir_name  - 缓存目录, 下载到的图片会保存这个目录里.
     size      - 指定图片的缩放大小, 默认是96px.
@@ -204,7 +204,7 @@ def update_share_image(liststore, tree_iters, col, large_col, pcs_files,
                                          height * icon_size // width,
                                          GdkPixbuf.InterpType.NEAREST)
             liststore[tree_path][col] = small_pix
-            liststore[tree_path][large_col] = pix 
+            liststore[tree_path][large_col] = pix
         except GLib.GError:
             logger.error(traceback.format_exc())
 

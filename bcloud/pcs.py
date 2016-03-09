@@ -266,7 +266,7 @@ def enable_private_share(cookie, tokens, fid_list):
     else:
         return None, passwd
 
-def verify_share_password(uk, shareid, pwd, vcode=''):
+def verify_share_password(cookie, uk, shareid, pwd, vcode=''):
     '''验证共享文件的密码.
 
     如果密码正确, 会在返回的请求头里加入一个cookie: BDCLND
@@ -282,7 +282,9 @@ def verify_share_password(uk, shareid, pwd, vcode=''):
     ])
     data = 'pwd={0}&vcode={1}'.format(pwd, vcode)
 
-    req = net.urlopen(url, data=data.encode())
+    req = net.urlopen(url, headers = {
+        'Cookie': cookie.header_output(),
+        }, data=data.encode())
     if req:
         content = req.data.decode()
         info = json.loads(content)

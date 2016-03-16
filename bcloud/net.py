@@ -30,7 +30,7 @@ default_headers = {
     'Cache-control': 'no-cache',
 }
 
-def urloption(url, headers={}, retries=RETRIES):
+def urloption(url, headers={}, retries=RETRIES, timeout=TIMEOUT):
     '''发送OPTION 请求'''
     headers_merged = default_headers.copy()
     for key in headers.keys():
@@ -38,7 +38,7 @@ def urloption(url, headers={}, retries=RETRIES):
     schema = urllib.parse.urlparse(url)
     for i in range(retries):
         try:
-            conn = http.client.HTTPConnection(schema.netloc)
+            conn = http.client.HTTPConnection(schema.netloc, timeout=timeout)
             conn.request('OPTIONS', url, headers=headers_merged)
             resp = conn.getresponse()
             return resp
@@ -66,10 +66,10 @@ def urlopen_simple(url, retries=RETRIES, timeout=TIMEOUT):
             return urllib.request.urlopen(url, timeout=timeout)
         except OSError:
             logger.error(traceback.format_exc())
-            
+
         except :
             logger.error(traceback.format_exc())
-            
+
     return None
 
 def urlopen(url, headers={}, data=None, retries=RETRIES, timeout=TIMEOUT):
@@ -101,13 +101,14 @@ def urlopen(url, headers={}, data=None, retries=RETRIES, timeout=TIMEOUT):
             return req
         except OSError:
             logger.error(traceback.format_exc())
-            
+
         except:
             logger.error(traceback.format_exc())
-            
+
     return None
 
-def urlopen_without_redirect(url, headers={}, data=None, retries=RETRIES):
+def urlopen_without_redirect(url, headers={}, data=None, retries=RETRIES,
+        timeout=TIMEOUT):
     '''请求一个URL, 并返回一个Response对象. 不处理重定向.
 
     使用这个函数可以返回URL重定向(Error 301/302)后的地址, 也可以重到URL中请
@@ -120,7 +121,8 @@ def urlopen_without_redirect(url, headers={}, data=None, retries=RETRIES):
     parse_result = urllib.parse.urlparse(url)
     for i in range(retries):
         try:
-            conn = http.client.HTTPConnection(parse_result.netloc)
+            conn = http.client.HTTPConnection(parse_result.netloc,
+                    timeout=TIMEOUT)
             if data:
                 conn.request('POST', url, body=data, headers=headers_merged)
             else:
@@ -133,7 +135,8 @@ def urlopen_without_redirect(url, headers={}, data=None, retries=RETRIES):
             #return None
     return None
 
-def post_multipart(url, headers, fields, files, retries=RETRIES):
+def post_multipart(url, headers, fields, files, retries=RETRIES,
+        timeout=TIMEOUT):
     content_type, body = encode_multipart_formdata(fields, files)
     schema = urllib.parse.urlparse(url)
 
@@ -145,7 +148,7 @@ def post_multipart(url, headers, fields, files, retries=RETRIES):
 
     for i in range(retries):
         try:
-            h = http.client.HTTPConnection(schema.netloc)
+            h = http.client.HTTPConnection(schema.netloc, timeout=timeout)
             h.request('POST', url, body=body, headers=headers_merged)
             req = h.getresponse()
             encoding = req.getheader('Content-encoding')

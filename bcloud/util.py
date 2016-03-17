@@ -208,3 +208,9 @@ def validate_pathname(filepath):
         if path[0] in filter3 or path[-1] in filter3:
             return ValidatePathState.CHAR_ERROR3
     return ValidatePathState.OK
+
+def fix_json_escape(json_str):
+    # Remove invalid escape
+    json_str = re.sub(r'\\(?![\\"/bfnrt])', "", json_str)
+    return json_str
+

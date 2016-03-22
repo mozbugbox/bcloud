@@ -45,6 +45,8 @@ def urloption(url, headers={}, retries=RETRIES, timeout=TIMEOUT):
         except OSError:
             logger.error(traceback.format_exc())
             #return None
+        except KeyboardInterrupt:
+            raise
         except:
             logger.error(traceback.format_exc())
             #return None
@@ -101,7 +103,8 @@ def urlopen(url, headers={}, data=None, retries=RETRIES, timeout=TIMEOUT):
             return req
         except OSError:
             logger.error(traceback.format_exc())
-
+        except KeyboardInterrupt:
+            raise
         except:
             logger.error(traceback.format_exc())
 
@@ -130,6 +133,8 @@ def urlopen_without_redirect(url, headers={}, data=None, retries=RETRIES,
             return conn.getresponse()
         except OSError:
             logger.error(traceback.format_exc())
+        except KeyboardInterrupt:
+            raise
         except:
             logger.error(traceback.format_exc())
             #return None
@@ -160,6 +165,8 @@ def post_multipart(url, headers, fields, files, retries=RETRIES,
             return req
         except OSError:
             logger.error(traceback.format_exc())
+        except KeyboardInterrupt:
+            raise
         except:
             logger.error(traceback.format_exc())
             #return None
